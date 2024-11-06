@@ -1,6 +1,5 @@
-pip install uvicorn
-pip install fastapi uvicorn
-pip install mysqlclient
-pip install python-multipart
+uvicorn
+fastapi
+mysqlclient
+python-multipart
 
-pip install fastapi uvicorn mysqlclient passlib
