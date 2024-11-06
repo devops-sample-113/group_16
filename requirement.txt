@@ -1,5 +1,0 @@
-uvicorn
-fastapi
-mysqlclient
-python-multipart
-
