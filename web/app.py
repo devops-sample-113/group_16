@@ -1,10 +1,8 @@
-from flask import Flask
+from flask import Flask,render_template
 app = Flask(__name__)
 @app.route("/")
 def hello():
-    return "Hello, World!"
-
-@app.route("/admin")
-def admin():
-    # return admin html page
-    return ""
+    return render_template('Login.html')
+if __name__ == "__main__":
+    app.debug = True
+    app.run(host='localhost', port=5000)
