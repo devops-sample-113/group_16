@@ -1,16 +1,29 @@
 # bash: python -m uvicorn python_fastapi_example:app
 from fastapi import FastAPI, Form, Cookie, Request
 from fastapi.responses import HTMLResponse, Response
+from fastapi.templating import Jinja2Templates
 import sqlite3
 
-app = FastAPI()
 
+app = FastAPI()
+# 
+templates = Jinja2Templates(directory="templates")
+
+@app.get('/test',response_class=HTMLResponse)
+def index():
+
+    id = "12345678"
+    return templates.TemplateResponse(
+        name="test.html",context={"id": id}
+    )
+
+# 
 @app.get('/', response_class=HTMLResponse)
 def index():
     form = """
     <form method="post" action="/login">
         ID: <input type="number" name="ID">
-        Password: <input name="Password">
+        Password: <input type="password" name="Password">
         <input type="submit" value="登入">
     </form>
     """
@@ -56,6 +69,8 @@ def log(request: Request):
 
     # 加退選表單
     add_drop_form = """
+    <div style='height:auto;'>
+    <fieldset style='width:fit-content'>
     <form method="post" action="/modify_course" style="display: flex; align-items: center;">
         <input type="text" name="course_name" id="course_name" list="course_list" placeholder="輸入課程名稱" 
                style="width: 600px; margin-right: 20px;">
@@ -63,6 +78,8 @@ def log(request: Request):
         <input type="submit" name="action" value="加選" style="margin-right: 5px;">
         <input type="submit" name="action" value="退選">
     </form>
+    </fieldset>
+    </div>
     <script>
         document.getElementById('course_name').addEventListener('input', function() {
             fetch('/autocomplete?query=' + this.value)
@@ -81,20 +98,23 @@ def log(request: Request):
     """
 
     # 禁用滾動的樣式
+    # <style>
+    #     /* 禁用滾動 */
+    #     html, body {{
+    #         overflow: hidden;
+    #         height: 100%;
+    #         margin: 0;
+    #     }}
+    # </style>
     logout = f"""
-    <style>
-        /* 禁用滾動 */
-        html, body {{
-            overflow: hidden;
-            height: 100%;
-            margin: 0;
-        }}
-    </style>
-    <h2>Welcome, {user_name}</h2>
-    <h3>當前學分數: {current_credits}</h3>
+    
+    <div style='font-size:32px;'>Welcome, {user_name}</div>
+    <div style='font-size:24px;'>當前學分數: {current_credits}</div>
+    <div>
     <form method="post" action="/logout" style="display: inline;">
         <input type="submit" value="登出">
     </form>
+    </div>
     """
 
     timetable = showtable(ID)
@@ -102,12 +122,12 @@ def log(request: Request):
     days = ["星期一", "星期二", "星期三", "星期四", "星期五"]
     # 使用 flexbox 將課表和課程列表水平排列
     table = """
-    <div style="display: flex; padding: 5px;">
+    <div style="display: flex; padding: 5px;width:60%">
         <div style="flex: 2; padding-right: 20px;">
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: center; font-size: 15px;">
                 <tr>
                     <th style="padding: 5px; width: 8%; height: 30px;">時間</th>""" + "".join(
-        f'<th style="padding: 5px; width: 12%; height: 30px;">{day}</th>' for day in days
+        f'<th style="padding: 5px; max-width:120px ; height: 30px;">{day}</th>' for day in days
     ) + "</tr>"
 
     section_to_time = {
@@ -128,11 +148,17 @@ def log(request: Request):
     # 將「所有課程和餘額」列表放在課表的右邊
     all_courses = get_all_courses_with_quota()
     courses_list = "<div style='flex: 1; padding-left: 10px;'><h3>所有課程和餘額</h3><ul style='list-style-type: none; padding: 0;'>"
+    course_table = "<div style='flex:1;'><table style='text-align:center;border:1px dashed;'><tr><th style='min-width:80px;'>課程名稱</th><th style='min-width:80px;'>學分數</th><th style='min-width:80px;'>剩餘名額</th></tr>"
     for course, credit, quota in all_courses:
-        courses_list += f"<li style='margin-bottom: 10px;'>{course} (學分數: {credit}): 剩餘 {quota} 名額</li>"
+        course_table += f"<tr><td>{course}</td><td>{credit}</td><td>{quota}</td></tr>"
+        courses_list += f"<li style='margin-bottom: 10px;'>{course}    學分數: {credit} <br> 剩餘名額:  {quota} 名</li>"
     courses_list += "</ul></div></div>"
+    course_table += "</table></div>"
 
-    return logout + '<br><br>' + add_drop_form + '<br><br>' + table + courses_list
+    container = "<div style='height:auto;width:90%;position:relative;left:10%'>"
+    container_end = '</div>'
+
+    return container + logout + '<br><br>' + add_drop_form + '<br><br>' + table + course_table + container_end
 
 
 @app.get('/autocomplete')
