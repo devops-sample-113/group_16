@@ -265,3 +265,7 @@ def logout(response: Response):
     response.delete_cookie("Password")
     response.delete_cookie("UserName")
     return "logout success" + """<meta http-equiv="Refresh" content="3; URL=http://127.0.0.1:8000/" />"""
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="localhost", port=8000)
