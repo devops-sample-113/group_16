@@ -73,7 +73,7 @@ def log(request: Request):
     <fieldset style='width:fit-content'>
     <form method="post" action="/modify_course" style="display: flex; align-items: center;">
         <input type="text" name="course_name" id="course_name" list="course_list" placeholder="輸入課程名稱" 
-               style="width: 600px; margin-right: 20px;">
+               style="width: 60%; margin-right: 20px;">
         <datalist id="course_list"></datalist>
         <input type="submit" name="action" value="加選" style="margin-right: 5px;">
         <input type="submit" name="action" value="退選">
