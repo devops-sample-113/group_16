@@ -37,6 +37,9 @@
 資訊處教職員 
 >(架設與維護系統)
 
+## 1.3 Use Case Diagram
+![Use Case Diagram](https://devops-sample-113.github.io/group_16/UseCase.png)
+
 # 2.需求規格
 ## 2.1加選課程
 
@@ -52,8 +55,6 @@
 ▪ 功能定義
 ▪ 輸入與輸出
 ▪ 需要執行的動作
-
-![Use Case Diagram](https://devops-sample-113.github.io/group_16/UseCase.png)
 
 ▪ 前置與後置條件
 > (Pre-& post-condition) 
