@@ -53,7 +53,7 @@
 ▪ 輸入與輸出
 ▪ 需要執行的動作
 
-![Use Case Diagram](./UseCase.png)
+![Use Case Diagram](https://devops-sample-113.github.io/group_16/UseCase.png)
 
 ▪ 前置與後置條件
 > (Pre-& post-condition) 
